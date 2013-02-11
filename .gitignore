@@ -1,0 +1,6 @@
+.idea
+project
+lib_managed
+out
+target
+*.iml
