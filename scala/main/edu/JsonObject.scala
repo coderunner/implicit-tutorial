@@ -28,20 +28,27 @@ class JsonObject(properties: Map[String, Any]) {
   def render(): String = {
     val builder = new StringBuilder(OPEN_BRACE)
     for (prop <- properties) {
-      builder.append(prop._1)
-      builder.append(COLON)
-      builder.append(
-        if (prop._2.isInstanceOf[String]) {
-          "\"" + prop._2.asInstanceOf[String] + "\""
-        } else if (prop._2.isInstanceOf[Int]) {
-          prop._2.toString
-        } else {
-          throw new RuntimeException("Invalid Type")
-        })
+      renderProperty(builder, prop)
       builder.append(COMMA)
     }
     builder.setLength(builder.length - COMMA.length)
     builder.append(CLOSING_BRACE).toString()
+  }
+
+  private def renderProperty(builder: StringBuilder, prop: (String, Any)) {
+    builder.append(prop._1)
+    builder.append(COLON)
+    builder.append(renderValue(prop._2))
+  }
+
+  private def renderValue(value: Any): String = {
+    if (value.isInstanceOf[String]) {
+      "\"" + value.asInstanceOf[String] + "\""
+    } else if (value.isInstanceOf[Int]) {
+      value.toString
+    } else {
+      throw new RuntimeException("Invalid Type")
+    }
   }
 }
 
