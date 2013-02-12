@@ -1,0 +1,102 @@
+1- Continuous test with sbt ~test
+
+2- Remove instanceOf in renderValue to
+
+  private def renderValue(value: Any): String = {
+    value match {
+      case s: String => QUOTES + s + QUOTES
+      case i: Int => i.toString
+      case _ =>  throw new RuntimeException("Invalid Type")
+    }
+  }
+
+3- Remove _1 and _2 in render to
+
+  def render(): String = {
+    val builder = new StringBuilder(OPEN_BRACE)
+    for (prop <- properties) {
+      val (name, value) = prop
+      renderProperty(builder, name, value)
+      builder.append(COMMA)
+    }
+    builder.setLength(builder.length - COMMA.length)
+    builder.append(CLOSING_BRACE).toString()
+  }
+
+4- Remove for loop in render to
+
+def render(): String = properties.map(renderProperty).mkString(OPEN_BRACE, COMMA, CLOSING_BRACE)
+
+private def renderProperty(prop: (String, Any)): String = {
+    val (name, value) = prop
+    name + COLON + renderValue(value)
+  }
+
+5- Uncomment test then, create apply() and add implicit conversion in JsonObject
+
+def apply(properties: Map[String, Any]) = new JsonObject(properties)
+implicit def mapToJsonObject(jsonMap: Map[String, Any]) = JsonObject(jsonMap)
+
+import in test
+
+6- Move renderJson in JsonObject companion object
+
+def renderJson(json: JsonObject): String = {
+    json.allProperties.map(renderProperty).mkString(OPEN_BRACE, COMMA, CLOSING_BRACE)
+  }
+
+7- Add JsonRenderer trait and Pretty implementation
+
+trait JsonRenderer {
+  def renderJson(json: JsonObject): String
+}
+
+class PrettyJsonRenderer extends JsonRenderer {
+  val OPEN_BRACE = "{\n"
+  val COLON = " : "
+  val COMMA = ",\n"
+  val QUOTES = "\""
+  val CLOSING_BRACE = "\n}\n"
+
+  def renderJson(json: JsonObject) = json.allProperties.map(renderProperty).mkString(OPEN_BRACE, COMMA, CLOSING_BRACE)
+
+  private def renderProperty(prop: (String, Any)): String = {
+    val (name, value) = prop
+    name + COLON + renderValue(value)
+  }
+
+  private def renderValue(value: Any): String = {
+    value match {
+      case s: String => QUOTES + s + QUOTES
+      case i: Int => i.toString
+      case _ =>  throw new RuntimeException("Invalid Type")
+    }
+  }
+}
+
+8- Make Pretty an object
+
+9- Make the renderer implicit
+
+implicit val defaultRenderer = PrettyJsonRenderer
+  def renderJson(json: JsonObject)(implicit renderer: JsonRenderer): String = {
+    renderer.renderJson(json)
+  }
+
+10- Make invalid type not compile, add JsonValueType
+
+trait JsonValueType
+
+case class StringValueType(value: String) extends JsonValueType
+case class IntValueType(value: Int) extends JsonValueType
+
+11- Add implicits to convert string and int
+
+  implicit def stringToJsonString(s: String) = StringValueType(s)
+  implicit def intToJsonInt(i: Int) = IntValueType(i)
+
+12-
+
+
+
+
