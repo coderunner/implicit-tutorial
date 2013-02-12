@@ -35,15 +35,15 @@ class JsonObject(properties: Map[String, Any]) {
     builder.append(CLOSING_BRACE).toString()
   }
 
-  private def renderProperty(builder: StringBuilder, prop: (String, Any)) {
-    builder.append(prop._1)
+  private def renderProperty(builder: StringBuilder, property: (String, Any)) {
+    builder.append(property._1)
     builder.append(COLON)
-    builder.append(renderValue(prop._2))
+    builder.append(renderValue(property._2))
   }
 
   private def renderValue(value: Any): String = {
     if (value.isInstanceOf[String]) {
-      "\"" + value.asInstanceOf[String] + "\""
+      QUOTES + value.asInstanceOf[String] + QUOTES
     } else if (value.isInstanceOf[Int]) {
       value.toString
     } else {
@@ -56,5 +56,6 @@ object JsonObject {
   val OPEN_BRACE = "{\n"
   val COLON = " : "
   val COMMA = ",\n"
+  val QUOTES = "\""
   val CLOSING_BRACE = "\n}\n"
 }
