@@ -5,6 +5,7 @@ package edu
  */
 class JsonObject(properties: Map[String, Any]) {
   import JsonObject._
+
   /**
    * Get the value associated with the property 'name'.
    *
