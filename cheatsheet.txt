@@ -95,7 +95,17 @@ case class IntValueType(value: Int) extends JsonValueType
   implicit def stringToJsonString(s: String) = StringValueType(s)
   implicit def intToJsonInt(i: Int) = IntValueType(i)
 
-12-
+12- But then doesn't compile, either add type or... add -:-
+
+case class JsonKey(name: String) {
+  def -:-(value: JsonValueType): (JsonKey, JsonValueType) = (this, value)
+
+  override def toString = name
+}
+
+implicit def stringToJsonKey(name: String) = new JsonKey(name)
+
+
 
 
 
