@@ -1,4 +1,4 @@
-1- Continuous test with sbt ~test
+1- Continuous test with sbt ~test, scala console with sbt compile console
 
 2- Remove instanceOf in renderValue to
 

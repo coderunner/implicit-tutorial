@@ -1,14 +1,13 @@
 package edu
 
 import org.scalatest.FunSuite
-import edu.JsonObject._
 
 /**
  * Test class for JsonObject
  */
 class TestJsonObject extends FunSuite {
 
-  val jsonObjectMap = Map("name" :-> "joe", "age" :-> 34)
+  val jsonObjectMap = Map("name" -> "joe", "age" -> 34)
   val expectedJson = "{\n" +
     "name : \"joe\",\n" +
     "age : " + 34 + "\n" +
@@ -17,17 +16,17 @@ class TestJsonObject extends FunSuite {
   test("should render json") {
     val jsonObject = new JsonObject(jsonObjectMap)
 
-    assert(expectedJson === renderJson(jsonObject))
+    assert(expectedJson === jsonObject.render())
   }
 
-//  test("should not compile") {
-//    intercept[RuntimeException] {
-//      renderJson(new JsonObject(Map("name" :-> "joe", "height" :-> 2.67)))
-//    }
-//  }
-
-  test("nice if could render from a map directly") {
-    assert(expectedJson === renderJson(jsonObjectMap))
+  test("unsupported type should throw exception") {
+    intercept[RuntimeException] {
+      new JsonObject(Map("name" -> "joe", "height" -> 2.67)).render()
+    }
   }
+
+  //  test("nice if could render from a map directly") {
+  //    assert(expectedJson === jsonObjectMap.render())
+  //  }
 
 }
