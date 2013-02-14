@@ -54,7 +54,7 @@ class JsonObject(properties: Map[String, Any]) {
 }
 
 object JsonObject {
-  val OPEN_BRACE = "\n"
+  val OPEN_BRACE = "{\n"
   val COLON = " : "
   val COMMA = ",\n"
   val QUOTES = "\""
